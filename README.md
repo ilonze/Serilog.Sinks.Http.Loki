@@ -10,7 +10,7 @@ __Package__ - [Serilog.Sinks.Http.Loki](https://www.nuget.org/packages/serilog.s
 
 # Serilog.Sinks.Http.Loki
 
-![.NET Core](https://github.com/ilonze/Serilog.Sinks.Http.Loki/workflows/.NET%205.0/badge.svg?branch=main)
+![.NET Core](https://github.com/ilonze/Serilog.Sinks.Http.Loki/workflows/.NET%205.0/badge.svg?branch=master)
 
 This is a Serilog Sink for Grafana's new [Loki Log Aggregator](https://grafana.com/loki).
 
