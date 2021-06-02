@@ -26,7 +26,7 @@
 		<!-- Embed symbols in NuGet package -->
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>7.2.0</Version>
+		<Version>7.2.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -43,6 +43,8 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<RepositoryUrl>https://github.com/ilonze/serilog-sinks-http-loki.git</RepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Authors>Lonze</Authors>
+		<Company />
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(CI)' == 'True'">
