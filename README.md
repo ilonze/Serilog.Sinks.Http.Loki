@@ -93,7 +93,7 @@ var credentials = new BasicAuthCredentials("http://localhost:3100", "<username>"
 var log = new LoggerConfiguration()
         .MinimumLevel.Verbose()
         .Enrich.FromLogContext()
-        .WriteTo.HttpLoki(credentials: credentials, formatProvider: new LogLabelProvider())
+        .WriteTo.HttpLoki(credentials: credentials, logLabelProvider: new LogLabelProvider())
         .CreateLogger();
 ```
 
@@ -131,7 +131,7 @@ var credentials = new BasicAuthCredentials("http://localhost:3100", "<username>"
 var log = new LoggerConfiguration()
         .MinimumLevel.Verbose()
         .Enrich.FromLogContext()
-        .WriteTo.HttpLoki(credentials: credentials, httpClient: new ExampleHttpClient(), formatProvider: new LogLabelProvider())
+        .WriteTo.HttpLoki(credentials: credentials, httpClient: new ExampleHttpClient(), logLabelProvider: new LogLabelProvider())
         .CreateLogger();
 ```
 
@@ -139,9 +139,9 @@ var log = new LoggerConfiguration()
 
 ### Configure using appsettings.json
 `Serilog.Sinks.Http.Loki` can be configured with `appsettings.json` using `Serilog.Settings.Configuration`.  
-It support the following arguments `serverUrl`, `username`, `password`, `credentials`, `batchPostingLimit`, `queueLimit`, `period`, `restrictedToMinimumLevel`, `httpClient`, `outputTemplate`, `formatProvider` and `labelProvider`.  
+It support the following arguments `serverUrl`, `username`, `password`, `credentials`, `batchPostingLimit`, `queueLimit`, `period`, `restrictedToMinimumLevel`, `httpClient`, `outputTemplate`, `formatProvider` and `logLabelProvider`.  
 Not all fields can be used in combination look in [LoggerSinkConfigurationExtensions.cs](src/Serilog.Sinks.Http.Loki/LoggerSinkConfigurationExtensions.cs) for the supported combinations.  
-`credentials`, `labelProvider`, `httpClient`, and `formatProvider` are classes and must be specified using the `Namespace.ClassName, Assembly` syntax.
+`credentials`, `logLabelProvider`, `httpClient`, and `formatProvider` are classes and must be specified using the `Namespace.ClassName, Assembly` syntax.
 ```json
 "Serilog": {
   "MinimumLevel": {
@@ -153,7 +153,7 @@ Not all fields can be used in combination look in [LoggerSinkConfigurationExtens
       "Name": "HttpLoki",
       "Args": {
         "serverUrl": "https://loki:3000",
-        "labelProvider": "Namespace.ClassName, Assembly"
+        "logLabelProvider": "Namespace.ClassName, Assembly"
       }
     }
   ]
