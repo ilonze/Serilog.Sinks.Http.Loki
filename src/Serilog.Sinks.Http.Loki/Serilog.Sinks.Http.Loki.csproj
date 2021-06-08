@@ -27,7 +27,7 @@
 		<!-- Embed symbols in NuGet package -->
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>7.2.1</Version>
+		<Version>7.2.2</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
