@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog.Sinks.Http.Loki.BatchFormatters;
 
 namespace Serilog.Sinks.Http.Loki
 {
@@ -12,20 +13,26 @@ namespace Serilog.Sinks.Http.Loki
     public abstract class LokiCredentials
     {
         /// <summary>
-        /// The path for push log of Loki
+        /// 
         /// </summary>
-        public const string PostDataUri = "/api/prom/push";
+        public const string PushDataPath = "/loki/api/v1/push";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string DeprecatedPushDataPath = "/api/prom/push";
         /// <summary>
         /// Url of Credentials
         /// </summary>
         public string Url { get; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="url"></param>
-        protected LokiCredentials(string url)
+        /// <param name="pushPath"></param>
+        protected LokiCredentials(string url, string pushPath = PushDataPath)
         {
-            Url = $"{url.TrimEnd('/')}{PostDataUri}";
+            Url = $"{url.TrimEnd('/')}{pushPath ?? PushDataPath}";
         }
     }
     /// <summary>
@@ -37,7 +44,8 @@ namespace Serilog.Sinks.Http.Loki
         /// 
         /// </summary>
         /// <param name="url"></param>
-        public NoAuthCredentials(string url): base(url)
+        /// <param name="pushPath"></param>
+        public NoAuthCredentials(string url, string pushPath = PushDataPath) : base(url, pushPath)
         {
         }
     }
@@ -52,7 +60,8 @@ namespace Serilog.Sinks.Http.Loki
         /// <param name="url"></param>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        public BasicAuthCredentials(string url, string username, string password): base(url)
+        /// <param name="pushPath"></param>
+        public BasicAuthCredentials(string url, string username, string password, string pushPath = PushDataPath) : base(url, pushPath)
         {
             Username = username;
             Password = password;

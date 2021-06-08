@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 #if SYSTEMTEXTJSON
 using System.Text.Encodings.Web;
 using System.Text.Json;

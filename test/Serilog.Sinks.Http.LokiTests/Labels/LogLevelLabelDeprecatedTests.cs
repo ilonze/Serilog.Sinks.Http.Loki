@@ -13,15 +13,15 @@ using Xunit;
 
 namespace Serilog.Sinks.Loki.Tests.Labels
 {
-    public class LogLevelTests
+    public class LogLevelLabelDeprecatedTests
     {
         private readonly TestHttpClient _client;
         private readonly BasicAuthCredentials _credentials;
 
-        public LogLevelTests()
+        public LogLevelLabelDeprecatedTests()
         {
             _client = new TestHttpClient();
-            _credentials = new BasicAuthCredentials("http://test:80", "Walter", "White");
+            _credentials = new BasicAuthCredentials("http://test:80", "Walter", "White", LokiCredentials.DeprecatedPushDataPath);
         }
         
         [Fact]
@@ -40,11 +40,11 @@ namespace Serilog.Sinks.Loki.Tests.Labels
 
             // Assert
 #if SYSTEMTEXTJSON
-            var response = JsonSerializer.Deserialize<TestResponse>(_client.Content);
+            var response = JsonSerializer.Deserialize<TestDeprecatedResponse>(_client.Content);
 #elif NEWTONSOFTJSON
-            var response = JsonConvert.DeserializeObject<TestResponse>(_client.Content);
+            var response = JsonConvert.DeserializeObject<TestDeprecatedResponse>(_client.Content);
 #endif
-            ("{" + string.Join(",", response.Streams.First().Stream.OrderBy(r => r.Key).Select(r => $"{r.Key}=\"{r.Value}\"")) + "}").ShouldBe("{}");
+            response.Streams.First().Labels.ShouldBe("{}");
         }
         
         [Fact]
@@ -62,11 +62,11 @@ namespace Serilog.Sinks.Loki.Tests.Labels
 
             // Assert
 #if SYSTEMTEXTJSON
-            var response = JsonSerializer.Deserialize<TestResponse>(_client.Content);
+            var response = JsonSerializer.Deserialize<TestDeprecatedResponse>(_client.Content);
 #elif NEWTONSOFTJSON
-            var response = JsonConvert.DeserializeObject<TestResponse>(_client.Content);
+            var response = JsonConvert.DeserializeObject<TestDeprecatedResponse>(_client.Content);
 #endif
-            ("{" + string.Join(",", response.Streams.First().Stream.OrderBy(r => r.Key).Select(r => $"{r.Key}=\"{r.Value}\"")) + "}").ShouldBe("{level=\"trace\"}");
+            response.Streams.First().Labels.ShouldBe("{level=\"trace\"}");
         }
         
         [Fact]
@@ -84,11 +84,11 @@ namespace Serilog.Sinks.Loki.Tests.Labels
 
             // Assert
 #if SYSTEMTEXTJSON
-            var response = JsonSerializer.Deserialize<TestResponse>(_client.Content);
+            var response = JsonSerializer.Deserialize<TestDeprecatedResponse>(_client.Content);
 #elif NEWTONSOFTJSON
-            var response = JsonConvert.DeserializeObject<TestResponse>(_client.Content);
+            var response = JsonConvert.DeserializeObject<TestDeprecatedResponse>(_client.Content);
 #endif
-            ("{" + string.Join(",", response.Streams.First().Stream.OrderBy(r => r.Key).Select(r => $"{r.Key}=\"{r.Value}\"")) + "}").ShouldBe("{level=\"debug\"}");
+            response.Streams.First().Labels.ShouldBe("{level=\"debug\"}");
         }
         
         [Fact]
@@ -106,11 +106,11 @@ namespace Serilog.Sinks.Loki.Tests.Labels
 
             // Assert
 #if SYSTEMTEXTJSON
-            var response = JsonSerializer.Deserialize<TestResponse>(_client.Content);
+            var response = JsonSerializer.Deserialize<TestDeprecatedResponse>(_client.Content);
 #elif NEWTONSOFTJSON
-            var response = JsonConvert.DeserializeObject<TestResponse>(_client.Content);
+            var response = JsonConvert.DeserializeObject<TestDeprecatedResponse>(_client.Content);
 #endif
-            ("{" + string.Join(",", response.Streams.First().Stream.OrderBy(r => r.Key).Select(r => $"{r.Key}=\"{r.Value}\"")) + "}").ShouldBe("{level=\"info\"}");
+            response.Streams.First().Labels.ShouldBe("{level=\"info\"}");
         }
 
         [Fact]
@@ -128,11 +128,11 @@ namespace Serilog.Sinks.Loki.Tests.Labels
 
             // Assert
 #if SYSTEMTEXTJSON
-            var response = JsonSerializer.Deserialize<TestResponse>(_client.Content);
+            var response = JsonSerializer.Deserialize<TestDeprecatedResponse>(_client.Content);
 #elif NEWTONSOFTJSON
-            var response = JsonConvert.DeserializeObject<TestResponse>(_client.Content);
+            var response = JsonConvert.DeserializeObject<TestDeprecatedResponse>(_client.Content);
 #endif
-            ("{" + string.Join(",", response.Streams.First().Stream.OrderBy(r => r.Key).Select(r => $"{r.Key}=\"{r.Value}\"")) + "}").ShouldBe("{level=\"error\"}");
+            response.Streams.First().Labels.ShouldBe("{level=\"error\"}");
         }
 
         [Fact]
@@ -150,11 +150,11 @@ namespace Serilog.Sinks.Loki.Tests.Labels
 
             // Assert
 #if SYSTEMTEXTJSON
-            var response = JsonSerializer.Deserialize<TestResponse>(_client.Content);
+            var response = JsonSerializer.Deserialize<TestDeprecatedResponse>(_client.Content);
 #elif NEWTONSOFTJSON
-            var response = JsonConvert.DeserializeObject<TestResponse>(_client.Content);
+            var response = JsonConvert.DeserializeObject<TestDeprecatedResponse>(_client.Content);
 #endif
-            ("{" + string.Join(",", response.Streams.First().Stream.OrderBy(r => r.Key).Select(r => $"{r.Key}=\"{r.Value}\"")) + "}").ShouldBe("{level=\"critical\"}");
+            response.Streams.First().Labels.ShouldBe("{level=\"critical\"}");
         }
     }
 }

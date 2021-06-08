@@ -15,7 +15,7 @@ namespace Serilog.Sinks.Http.Loki.Tests.HttpClientTests
         
         [Theory]
         [InlineData("http://test:80")]
-        [InlineData("http://test:80/")]
+        [InlineData("https://test:80/")]
         public void RequestUriIsCorrect(string address)
         {
             // Arrange

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Serilog.Sinks.Http.Loki.Labels
 {
@@ -17,6 +14,7 @@ namespace Serilog.Sinks.Http.Loki.Labels
         public DefaultLogLabelProvider() : this(new List<LokiLabel>())
         {
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -34,16 +32,52 @@ namespace Serilog.Sinks.Http.Loki.Labels
             PropertiesToAppend = propertiesToAppend?.ToList() ?? new List<string>();
             FormatterStrategy = formatterStrategy;
         }
-        /// <inheritdoc/>
-        public IList<LokiLabel> GetLabels()
-            => Labels;
 
-        private IList<LokiLabel> Labels { get; }
         /// <inheritdoc/>
-        public IList<string> PropertiesAsLabels { get; }
+        public List<LokiLabel> Labels { get; }
+
         /// <inheritdoc/>
-        public IList<string> PropertiesToAppend { get; }
+        public List<string> PropertiesAsLabels { get; }
+
+        /// <inheritdoc/>
+        public List<string> PropertiesToAppend { get; }
+
         /// <inheritdoc/>
         public LokiFormatterStrategy FormatterStrategy { get; }
+
+        /// <inheritdoc/>
+        public DefaultLogLabelProvider AddLabel(string key, string value)
+        {
+            Labels.Add(new LokiLabel(key, value));
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public DefaultLogLabelProvider AddLabels(params LokiLabel[] labels)
+        {
+            Labels.AddRange(labels);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public DefaultLogLabelProvider AddLabels(Dictionary<string, string> labels)
+        {
+            Labels.AddRange(labels.Select(r => new LokiLabel(r.Key, r.Value)));
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public DefaultLogLabelProvider AddPropertiesAsLabels(params string[] properties)
+        {
+            PropertiesAsLabels.AddRange(properties);
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public DefaultLogLabelProvider AddPropertiesToAppend(params string[] properties)
+        {
+            PropertiesToAppend.AddRange(properties);
+            return this;
+        }
     }
 }

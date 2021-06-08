@@ -14,7 +14,7 @@ namespace Serilog.Sinks.Http.Loki.Tests.Infrastructure
     {
         public TestResponse()
         {
-            Streams = new List<Stream>();
+            Streams = new List<TestResponseStream>();
         }
 
 #if SYSTEMTEXTJSON
@@ -22,32 +22,22 @@ namespace Serilog.Sinks.Http.Loki.Tests.Infrastructure
 #elif NEWTONSOFTJSON
         [JsonProperty("streams")]
 #endif
-        public IList<Stream> Streams { get; set; }
+        public IList<TestResponseStream> Streams { get; set; }
     }
 
-    public class Stream
+    public class TestResponseStream
     {
 #if SYSTEMTEXTJSON
-        [JsonPropertyName("labels")]
+        [JsonPropertyName("stream")]
 #elif NEWTONSOFTJSON
-        [JsonProperty("labels")]
+        [JsonProperty("stream")]
 #endif
-        public string Labels { get; set; }
+        public Dictionary<string, string> Stream { get; set; }
 #if SYSTEMTEXTJSON
-        [JsonPropertyName("entries")]
+        [JsonPropertyName("values")]
 #elif NEWTONSOFTJSON
-        [JsonProperty("entries")]
+        [JsonProperty("values")]
 #endif
-        public List<Entry> Entries { get; set; }
-    }
-
-    public class Entry
-    {
-#if SYSTEMTEXTJSON
-        [JsonPropertyName("line")]
-#elif NEWTONSOFTJSON
-        [JsonProperty("line")]
-#endif
-        public string Line { get; set; }
+        public List<string[]> Values { get; set; }
     }
 }

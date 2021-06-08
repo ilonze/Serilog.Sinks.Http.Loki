@@ -10,12 +10,12 @@ using Serilog.Sinks.Http;
 using Serilog.Sinks.Http.Loki.Labels;
 using System.Text;
 
-namespace Serilog.Sinks.Http.Loki
+namespace Serilog.Sinks.Http.Loki.BatchFormatters
 {
     /// <summary>
     /// Formats batches of log events into payloads that can be sent over the network to Loki.
     /// </summary>
-    public class LokiBatchFormatter : IBatchFormatter
+    public class DeprecatedLokiBatchFormatter : ILokiBatchFormatter
     {
         private static readonly Regex ValueWithoutSpaces = new Regex("^\"(\\S+)\"$", RegexOptions.Compiled);
         /// <summary>
@@ -27,7 +27,7 @@ namespace Serilog.Sinks.Http.Loki
         /// 
         /// </summary>
         /// <param name="logLabelProvider"></param>
-        public LokiBatchFormatter(ILogLabelProvider logLabelProvider)
+        public DeprecatedLokiBatchFormatter(ILogLabelProvider logLabelProvider)
             => LogLabelProvider = logLabelProvider;
 
         /// <inheritdoc/>
@@ -47,7 +47,7 @@ namespace Serilog.Sinks.Http.Loki
             {
                 var labels = new List<LokiLabel>();
 
-                foreach (var globalLabel in LogLabelProvider.GetLabels())
+                foreach (var globalLabel in LogLabelProvider.Labels)
                     labels.Add(new LokiLabel(globalLabel.Key, globalLabel.Value));
 
                 var time = logEvent.Timestamp.ToString("o");
@@ -152,6 +152,9 @@ namespace Serilog.Sinks.Http.Loki
                         ? HandleAction.AppendToMessage
                         : HandleAction.Discard,
         };
+
+        /// <inheritdoc/>
+        public bool CanFormat(string path) => path == LokiCredentials.DeprecatedPushDataPath;
 
         private enum HandleAction
         {

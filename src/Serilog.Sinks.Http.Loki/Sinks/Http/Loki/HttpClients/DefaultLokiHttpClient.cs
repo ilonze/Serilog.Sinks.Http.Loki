@@ -1,6 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Serilog.Debugging;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -17,6 +22,12 @@ namespace Serilog.Sinks.Http.Loki.HttpClients
         /// HttpClient
         /// </summary>
         protected HttpClient HttpClient { get; }
+
+        /// <summary>
+        /// Callback when logs were's discarded
+        /// </summary>
+        protected Action<HttpResponseMessage>? CallbackOnDiscarded { get; private set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -39,7 +50,23 @@ namespace Serilog.Sinks.Http.Loki.HttpClients
         public virtual async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content)
         {
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            return await HttpClient.PostAsync(requestUri, content);
+
+            var result = await HttpClient.PostAsync(requestUri, content);
+            if (!result.IsSuccessStatusCode)
+            {
+                var contentAsString = await content.ReadAsStringAsync();
+                if ((int)result.StatusCode == 429)
+                {
+                    SelfLog.WriteLine("The Loki server is soo busy, these logs are discarded.\n{0}", contentAsString);
+                }
+                else
+                {
+                    SelfLog.WriteLine("Exception occurred during pushing logs, these logs are discarded. HttpStatusCode：{0}.\n{1}", result.StatusCode, contentAsString);
+                }
+                CallbackOnDiscarded?.Invoke(result);
+                return new HttpResponseMessage(HttpStatusCode.NoContent);
+            }
+            return result;
         }
 
         /// <inheritdoc/>
@@ -59,6 +86,12 @@ namespace Serilog.Sinks.Http.Loki.HttpClients
         {
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
+        }
+
+        /// <inheritdoc/>
+        public void OnDiscarded(Action<HttpResponseMessage> action)
+        {
+            CallbackOnDiscarded = action;
         }
     }
 }
